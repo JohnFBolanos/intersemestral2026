@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Envía tu Audio — Intersemestral 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #F7F5F0; --surface: #FFFFFF; --border: #E2DDD6;
+  --text: #1A1A18; --muted: #7A776F;
+  --accent: #2D6A4F; --accent-light: #D8EDDF;
+  --danger: #C1440E; --danger-light: #FBEEE9;
+  --blue: #1D4E8F; --blue-light: #E0E9F7;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem 4rem; }
+.wrap { max-width: 540px; margin: 0 auto; }
+
+/* Header */
+.header { text-align: center; margin-bottom: 2rem; }
+.header h1 { font-size: 26px; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 4px; }
+.header h1 span { font-weight: 500; }
+.tag { display: inline-block; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--accent); background: var(--accent-light); border-radius: 20px; padding: 3px 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+/* Selector de rol */
+.role-selector { display: flex; gap: 12px; margin-bottom: 1.5rem; }
+.role-btn { flex: 1; padding: 14px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.role-btn:hover { background: var(--bg); }
+.role-btn.active.estudiante { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+.role-btn.active.docente { background: var(--blue-light); border-color: var(--blue); color: var(--blue); font-weight: 500; }
+
+/* Welcome */
+.welcome { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+.welcome-title { font-size: 16px; font-weight: 500; margin-bottom: 0.6rem; }
+.welcome-sub { font-size: 13px; color: var(--muted); margin-bottom: 0.75rem; line-height: 1.6; }
+.welcome-list { list-style: none; margin-bottom: 0.75rem; }
+.welcome-list li { font-size: 13px; color: var(--muted); padding: 3px 0; display: flex; gap: 8px; }
+.welcome-list li::before { content: "—"; color: var(--accent); }
+.welcome-list.docente li::before { color: var(--blue); }
+.welcome-closing { font-size: 13px; color: var(--muted); }
+
+/* Tabs */
+.tabs { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.25rem; }
+.tab { flex: 1; padding: 11px 8px; text-align: center; font-size: 13px; color: var(--muted); cursor: pointer; background: none; border: none; border-right: 1px solid var(--border); font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+.tab:last-child { border-right: none; }
+.tab.active.est { background: var(--text); color: #fff; font-weight: 500; }
+.tab.active.doc { background: var(--blue); color: #fff; font-weight: 500; }
+.tab.done.est { color: var(--accent); }
+.tab.done.doc { color: var(--blue); }
+.tab-num { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: var(--border); align-items: center; justify-content: center; font-size: 10px; font-weight: 500; margin-right: 5px; color: var(--muted); vertical-align: middle; }
+.tab.active .tab-num { background: rgba(255,255,255,0.25); color: #fff; }
+.tab.done.est .tab-num { background: var(--accent); color: #fff; }
+.tab.done.doc .tab-num { background: var(--blue); color: #fff; }
+
+/* Panels */
+.panel { display: none; } .panel.active { display: block; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+.field { margin-bottom: 1.25rem; }
+.field label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'DM Mono', monospace; }
+.field select, .field input { width: 100%; padding: 10px 14px; font-size: 15px; font-family: 'DM Sans', sans-serif; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; appearance: none; transition: border-color 0.15s; }
+.field select:focus, .field input:focus { border-color: var(--text); }
+.confirm { margin-top: 8px; padding: 10px 14px; border-radius: 8px; background: var(--bg); color: var(--muted); min-height: 40px; font-family: 'DM Mono', monospace; font-size: 13px; }
+.confirm.found { background: var(--accent-light); color: var(--accent); }
+.confirm.found.doc { background: var(--blue-light); color: var(--blue); }
+.confirm.notfound { background: var(--danger-light); color: var(--danger); }
+.btn { width: 100%; padding: 13px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 15px; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 1rem; transition: all 0.15s; }
+.btn:hover:not(:disabled) { background: var(--bg); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn.primary-est { background: var(--text); color: #fff; border-color: var(--text); }
+.btn.primary-doc { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn.primary-est:hover:not(:disabled), .btn.primary-doc:hover:not(:disabled) { opacity: 0.88; }
+.btn-back { background: none; border: none; font-size: 13px; color: var(--muted); cursor: pointer; text-decoration: underline; display: block; text-align: center; margin-top: 10px; font-family: 'DM Sans', sans-serif; }
+
+/* Recorder */
+.recorder { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; }
+.waveform { width: 100%; height: 64px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; gap: 3px; padding: 0 16px; overflow: hidden; }
+.bar { width: 3px; border-radius: 2px; background: var(--border); transition: height 0.08s ease; }
+.timer { font-size: 36px; font-weight: 300; font-family: 'DM Mono', monospace; letter-spacing: 2px; }
+.rec-controls { display: flex; gap: 12px; align-items: center; width: 100%; }
+.btn-rec { width: 56px; height: 56px; min-width: 56px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.btn-rec:hover { background: var(--bg); }
+.btn-rec.on { border-color: var(--danger); background: var(--danger-light); }
+.dot { width: 18px; height: 18px; border-radius: 50%; background: var(--text); transition: all 0.2s; }
+.dot.on { background: var(--danger); border-radius: 4px; width: 14px; height: 14px; }
+.btn-send { flex: 1; padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 15px; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; }
+.btn-send:hover:not(:disabled) { background: var(--bg); }
+.btn-send:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-send.ready { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.btn-send.ready.doc { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.status { font-size: 13px; color: var(--muted); text-align: center; min-height: 20px; font-family: 'DM Mono', monospace; }
+.status.ok { color: var(--accent); } .status.err { color: var(--danger); }
+.summary { background: var(--bg); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--muted); margin-bottom: 1.25rem; line-height: 1.9; font-family: 'DM Mono', monospace; }
+.summary strong { color: var(--text); font-weight: 500; }
+.progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; display: none; }
+.progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <h1>Envía tu <span>Audio</span></h1>
+    <span class="tag">Intersemestral 2026 · Cálculo 2</span>
+  </div>
+
+  <!-- Selector de rol -->
+  <div class="role-selector">
+    <button class="role-btn estudiante active" onclick="setRol('estudiante')">🎓 Soy estudiante</button>
+    <button class="role-btn docente" onclick="setRol('docente')">👨‍🏫 Soy docente</button>
+  </div>
+
+  <!-- Bienvenida estudiante -->
+  <div class="welcome" id="welcomeEst">
+    <div class="welcome-title">👋 ¡Hola!</div>
+    <div class="welcome-sub">Cada día después de clase debes enviarme un audio de <strong>1 minuto</strong> contando:</div>
+    <ul class="welcome-list">
+      <li>¿Qué aprendiste hoy?</li>
+      <li>¿Qué se te dificultó?</li>
+      <li>¿Cómo va el ritmo del curso?</li>
+    </ul>
+    <div class="welcome-closing">Primero dime, ¿a qué grupo perteneces? 👇</div>
+  </div>
+
+  <!-- Bienvenida docente -->
+  <div class="welcome" id="welcomeDoc" style="display:none; border-color: #B8D0EF;">
+    <div class="welcome-title">👨‍🏫 ¡Hola, profe!</div>
+    <div class="welcome-sub">Después de cada clase envía un audio contando:</div>
+    <ul class="welcome-list docente">
+      <li>¿Qué temas viste en clase hoy?</li>
+      <li>¿Qué conceptos o palabras clave son fundamentales de esta sesión?</li>
+      <li>¿Con qué temas vistos anteriormente se conecta lo de hoy?</li>
+    </ul>
+    <div class="welcome-closing">Primero confirma tu grupo 👇</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="tabsRow">
+    <button class="tab active est" id="tab1" onclick="goTab(1)"><span class="tab-num">1</span>Grupo</button>
+    <button class="tab est" id="tab2" onclick="goTab(2)"><span class="tab-num">2</span>Identificación</button>
+    <button class="tab est" id="tab3" onclick="goTab(3)"><span class="tab-num">3</span>Grabar</button>
+  </div>
+
+  <!-- Panel 1: Grupo + Audio -->
+  <div class="panel active" id="panel1">
+    <div class="card">
+      <div class="field">
+        <label>Grupo</label>
+        <select id="selGrupo" onchange="onGrupoChange()">
+          <option value="">— Elige tu grupo —</option>
+          <option value="Calculo2_Guarin">Cálculo 2 — Grupo Guarín</option>
+          <option value="Calculo2_Romero">Cálculo 2 — Grupo Romero</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sesión</label>
+        <select id="selAudio" onchange="checkP1()">
+          <option value="">— Elige la sesión —</option>
+          <option value="0">Audio 0 · Lunes 9 de Junio</option>
+          <option value="1">Audio 1 · Martes 10 de Junio</option>
+          <option value="2">Audio 2 · Miércoles 11 de Junio</option>
+          <option value="3">Audio 3 · Jueves 12 de Junio</option>
+          <option value="4">Audio 4 · Lunes 16 de Junio</option>
+          <option value="5">Audio 5 · Martes 17 de Junio</option>
+          <option value="6">Audio 6 · Miércoles 18 de Junio</option>
+          <option value="7">Audio 7 · Jueves 19 de Junio</option>
+          <option value="8">Audio 8 · Lunes 22 de Junio</option>
+          <option value="9">Audio 9 · Martes 23 de Junio</option>
+          <option value="10">Audio 10 · Miércoles 24 de Junio</option>
+          <option value="11">Audio 11 · Jueves 25 de Junio</option>
+          <option value="12">Audio 12 · Viernes 26 de Junio</option>
+          <option value="13">Audio 13 · Lunes 30 de Junio</option>
+          <option value="14">Audio 14 · Martes 1 de Julio</option>
+          <option value="15">Audio 15 · Miércoles 2 de Julio</option>
+          <option value="16">Audio 16 · Jueves 3 de Julio</option>
+          <option value="17">Audio 17 · Lunes 6 de Julio</option>
+          <option value="18">Audio 18 · Martes 7 de Julio</option>
+          <option value="19">Audio 19 · Miércoles 8 de Julio</option>
+          <option value="20">Audio 20 · Jueves 9 de Julio</option>
+          <option value="21">Audio 21 · Viernes 10 de Julio</option>
+        </select>
+      </div>
+      <button class="btn primary-est" id="btnP1" disabled onclick="goTab(2)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- Panel 2: Identificación -->
+  <div class="panel" id="panel2">
+    <div class="card">
+      <div class="field">
+        <label>Número de cédula</label>
+        <input type="text" id="inputCed" placeholder="Ej: 1010965225" oninput="onCedInput()"/>
+        <div class="confirm" id="confirmBox">Ingresa tu cédula para confirmar tu nombre</div>
+      </div>
+      <button class="btn primary-est" id="btnP2" disabled onclick="goTab(3)">Continuar →</button>
+      <button class="btn-back" onclick="goTab(1)">← Volver</button>
+    </div>
+  </div>
+
+  <!-- Panel 3: Grabar -->
+  <div class="panel" id="panel3">
+    <div class="card">
+      <div class="summary" id="summaryBox"></div>
+      <div class="recorder">
+        <div class="waveform" id="waveform"></div>
+        <div class="timer" id="timer">0:00</div>
+        <div class="rec-controls">
+          <button class="btn-rec" id="btnRec" onclick="toggleRec()"><div class="dot" id="dot"></div></button>
+          <button class="btn-send" id="btnSend" disabled onclick="sendAudio()">Enviar a Drive</button>
+        </div>
+        <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="status" id="statusMsg">Presiona el círculo para comenzar a grabar</div>
+      </div>
+      <button class="btn-back" onclick="goTab(2)">← Volver</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SCRIPT_URL = 'PENDIENTE_URL_APPS_SCRIPT';
+
+// Sesiones con fechas
+const SESIONES = {
+  "0": "Audio 0 · Lunes 9 de Junio",
+  "1": "Audio 1 · Martes 10 de Junio",
+  "2": "Audio 2 · Miércoles 11 de Junio",
+  "3": "Audio 3 · Jueves 12 de Junio",
+  "4": "Audio 4 · Lunes 16 de Junio",
+  "5": "Audio 5 · Martes 17 de Junio",
+  "6": "Audio 6 · Miércoles 18 de Junio",
+  "7": "Audio 7 · Jueves 19 de Junio",
+  "8": "Audio 8 · Lunes 22 de Junio",
+  "9": "Audio 9 · Martes 23 de Junio",
+  "10": "Audio 10 · Miércoles 24 de Junio",
+  "11": "Audio 11 · Jueves 25 de Junio",
+  "12": "Audio 12 · Viernes 26 de Junio",
+  "13": "Audio 13 · Lunes 30 de Junio",
+  "14": "Audio 14 · Martes 1 de Julio",
+  "15": "Audio 15 · Miércoles 2 de Julio",
+  "16": "Audio 16 · Jueves 3 de Julio",
+  "17": "Audio 17 · Lunes 6 de Julio",
+  "18": "Audio 18 · Martes 7 de Julio",
+  "19": "Audio 19 · Miércoles 8 de Julio",
+  "20": "Audio 20 · Jueves 9 de Julio",
+  "21": "Audio 21 · Viernes 10 de Julio"
+};
+
+// Estudiantes — ACTUALIZAR CON LISTAS REALES
+const STUDENTS = {
+  "Calculo2_Guarin": {
+    "111111": "Estudiante Prueba Guarin",
+    "999991": "Leonardo Guarin"
+  },
+  "Calculo2_Romero": {
+    "222222": "Estudiante Prueba Romero",
+    "999992": "Margui Romero"
+  }
+};
+
+// Docentes
+const TEACHERS = {
+  "Calculo2_Guarin": { "999991": "Leonardo Guarin" },
+  "Calculo2_Romero": { "999992": "Margui Romero"  }
+};
+
+let state = { rol:'estudiante', grupo:'', audio:'', cedula:'', nombre:'' };
+let mediaRecorder, audioChunks=[], timerInterval, seconds=0, isRecording=false, audioBlob=null, animFrame;
+
+// ── Rol ──
+function setRol(rol) {
+  state.rol = rol;
+  const esDoc = rol === 'docente';
+
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.role-btn.' + rol).classList.add('active');
+
+  document.getElementById('welcomeEst').style.display = esDoc ? 'none' : 'block';
+  document.getElementById('welcomeDoc').style.display = esDoc ? 'block' : 'none';
+
+  // Cambiar color de tabs
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.remove('est','doc');
+    t.classList.add(esDoc ? 'doc' : 'est');
+  });
+
+  // Cambiar botones
+  const btnClass = esDoc ? 'primary-doc' : 'primary-est';
+  ['btnP1','btnP2'].forEach(id => {
+    const b = document.getElementById(id);
+    b.classList.remove('primary-est','primary-doc');
+    b.classList.add(btnClass);
+  });
+
+  // Reset estado
+  state.grupo=''; state.audio=''; state.cedula=''; state.nombre='';
+  document.getElementById('selGrupo').value='';
+  document.getElementById('selAudio').value='';
+  document.getElementById('inputCed').value='';
+  document.getElementById('confirmBox').className='confirm';
+  document.getElementById('confirmBox').textContent='Ingresa tu cédula para confirmar tu nombre';
+  document.getElementById('btnP1').disabled=true;
+  document.getElementById('btnP2').disabled=true;
+  goTab(1);
+}
+
+// ── Navegación ──
+function goTab(n) {
+  if (n===2 && (!state.grupo || state.audio==='')) return;
+  if (n===3 && !state.nombre) return;
+  const rol = state.rol === 'docente' ? 'doc' : 'est';
+  [1,2,3].forEach(i => {
+    document.getElementById('panel'+i).classList.toggle('active', i===n);
+    const tab = document.getElementById('tab'+i);
+    tab.classList.remove('active','done','est','doc');
+    tab.classList.add(rol);
+    if (i===n) tab.classList.add('active');
+    if (i<n) tab.classList.add('done');
+  });
+  if (n===3) buildSummary();
+}
+
+function onGrupoChange() { state.grupo = document.getElementById('selGrupo').value; checkP1(); }
+function checkP1() {
+  state.audio = document.getElementById('selAudio').value;
+  document.getElementById('btnP1').disabled = !(state.grupo && state.audio !== '');
+}
+
+function onCedInput() {
+  const ced = document.getElementById('inputCed').value.trim();
+  state.cedula = ced;
+  const box = document.getElementById('confirmBox');
+  const btn = document.getElementById('btnP2');
+  const esDoc = state.rol === 'docente';
+
+  if (ced.length < 3) {
+    box.className='confirm';
+    box.textContent='Ingresa tu cédula para confirmar tu nombre';
+    btn.disabled=true; state.nombre=''; return;
+  }
+
+  const lista = esDoc ? TEACHERS[state.grupo] : STUDENTS[state.grupo];
+  const nombre = lista?.[ced];
+
+  if (nombre) {
+    state.nombre=nombre;
+    box.className = esDoc ? 'confirm found doc' : 'confirm found';
+    box.textContent='✓ '+nombre;
+    btn.disabled=false;
+  } else {
+    state.nombre='';
+    box.className='confirm notfound';
+    box.textContent='Cédula no encontrada en '+state.grupo.replace('_',' ');
+    btn.disabled=true;
+  }
+}
+
+function buildSummary() {
+  const esDoc = state.rol === 'docente';
+  document.getElementById('summaryBox').innerHTML =
+    'Rol: <strong>'+(esDoc ? 'Docente' : 'Estudiante')+'</strong><br>'+
+    'Grupo: <strong>'+state.grupo.replace('_',' ')+'</strong><br>'+
+    'Sesión: <strong>'+SESIONES[state.audio]+'</strong><br>'+
+    'Nombre: <strong>'+state.nombre+'</strong><br>'+
+    'Archivo: <strong>'+getFileName()+'</strong>';
+}
+
+function getFileName() {
+  const now = new Date(), pad = n => String(n).padStart(2,'0');
+  const tipo = state.rol === 'docente' ? 'docente' : 'estudiante';
+  return state.grupo+'_'+state.cedula+'_'+tipo+'_audio'+state.audio+'_'+
+    now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'_'+
+    pad(now.getHours())+pad(now.getMinutes())+'.webm';
+}
+
+// ── Waveform ──
+function buildBars() {
+  const wf = document.getElementById('waveform'); wf.innerHTML='';
+  for (let i=0;i<24;i++) { const b=document.createElement('div'); b.className='bar'; b.style.height=Math.floor(8+Math.random()*28)+'px'; b.id='bar'+i; wf.appendChild(b); }
+}
+function resetBars() { for(let i=0;i<24;i++){const b=document.getElementById('bar'+i);if(b){b.style.height=Math.floor(8+Math.random()*28)+'px';b.style.background='var(--border)';}}}
+function animBars(analyser, data) {
+  animFrame=requestAnimationFrame(()=>animBars(analyser,data));
+  analyser.getByteFrequencyData(data);
+  const color = state.rol === 'docente' ? '#1D4E8F' : '#C1440E';
+  for(let i=0;i<24;i++){const b=document.getElementById('bar'+i);if(!b)continue;const v=data[Math.floor(i*data.length/24)];b.style.height=Math.max(4,Math.round((v/255)*54))+'px';b.style.background=color;}
+}
+buildBars();
+
+// ── Grabación ──
+async function toggleRec() {
+  if (!isRecording) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      const ctx = new AudioContext(), src = ctx.createMediaStreamSource(stream), analyser = ctx.createAnalyser();
+      analyser.fftSize=64; src.connect(analyser);
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      audioChunks=[];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        audioBlob = new Blob(audioChunks, {type:'audio/webm'});
+        const esDoc = state.rol === 'docente';
+        document.getElementById('btnSend').disabled = false;
+        const btnSend = document.getElementById('btnSend');
+        btnSend.classList.add('ready');
+        if (esDoc) btnSend.classList.add('doc');
+        document.getElementById('statusMsg').textContent = 'Grabación lista. Presiona "Enviar a Drive".';
+        document.getElementById('statusMsg').className = 'status ok';
+        resetBars(); cancelAnimationFrame(animFrame); stream.getTracks().forEach(t=>t.stop());
+      };
+      mediaRecorder.start(); isRecording=true; seconds=0;
+      document.getElementById('timer').textContent='0:00';
+      timerInterval=setInterval(()=>{seconds++;document.getElementById('timer').textContent=Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');},1000);
+      document.getElementById('btnRec').classList.add('on');
+      document.getElementById('dot').classList.add('on');
+      document.getElementById('statusMsg').textContent='Grabando… presiona de nuevo para detener';
+      document.getElementById('statusMsg').className='status';
+      document.getElementById('btnSend').disabled=true;
+      document.getElementById('btnSend').classList.remove('ready','doc');
+      audioBlob=null; animBars(analyser,data);
+    } catch(e) {
+      document.getElementById('statusMsg').textContent='No se pudo acceder al micrófono. Verifica los permisos.';
+      document.getElementById('statusMsg').className='status err';
+    }
+  } else {
+    mediaRecorder.stop(); isRecording=false; clearInterval(timerInterval);
+    document.getElementById('btnRec').classList.remove('on');
+    document.getElementById('dot').classList.remove('on');
+  }
+}
+
+// ── Enviar a Drive ──
+async function sendAudio() {
+  if (!audioBlob) return;
+  const btn = document.getElementById('btnSend');
+  const msg = document.getElementById('statusMsg');
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+
+  btn.disabled=true; btn.classList.remove('ready','doc');
+  progressBar.style.display='block';
+  msg.textContent='Preparando audio…'; msg.className='status';
+
+  try {
+    const base64 = await blobToBase64(audioBlob);
+    progressFill.style.width='30%';
+    msg.textContent='Enviando a Drive…';
+
+    let prog=30;
+    const progInterval = setInterval(()=>{ prog=Math.min(prog+5,85); progressFill.style.width=prog+'%'; },400);
+
+    await fetch(SCRIPT_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        fileName: getFileName(),
+        fileData: base64.split(',')[1],
+        grupo: state.grupo,
+        cedula: state.cedula,
+        audioNum: state.audio,
+        rol: state.rol
+      })
+    });
+
+    clearInterval(progInterval);
+    progressFill.style.width='100%';
+    setTimeout(()=>{
+      progressBar.style.display='none';
+      progressFill.style.width='0%';
+      msg.textContent='✓ Audio enviado y registrado correctamente';
+      msg.className='status ok';
+      audioBlob=null;
+      document.getElementById('timer').textContent='0:00';
+      resetBars();
+    },500);
+
+  } catch(e) {
+    progressBar.style.display='none';
+    msg.textContent='Error al enviar. Intenta de nuevo.';
+    msg.className='status err';
+    btn.disabled=false;
+    btn.classList.add('ready');
+  }
+}
+
+function blobToBase64(blob) {
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onloadend=()=>resolve(reader.result);
+    reader.onerror=reject;
+    reader.readAsDataURL(blob);
+  });
+}
+</script>
+</body>
+</html>

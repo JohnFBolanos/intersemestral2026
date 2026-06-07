@@ -102,7 +102,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
   <div class="header">
     <h1>Envía tu <span>Audio</span></h1>
-    <span class="tag">Intersemestral 2026 · Cálculo 2</span>
+    <span class="tag">Intersemestral 2026</span>
   </div>
 
   <!-- Selector de rol -->
@@ -142,7 +142,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <button class="tab est" id="tab3" onclick="goTab(3)"><span class="tab-num">3</span>Grabar</button>
   </div>
 
-  <!-- Panel 1: Grupo + Audio -->
+  <!-- Panel 1: Grupo + Sesión -->
   <div class="panel active" id="panel1">
     <div class="card">
       <div class="field">
@@ -151,6 +151,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <option value="">— Elige tu grupo —</option>
           <option value="Calculo2_Guarin">Cálculo 2 — Grupo Guarín</option>
           <option value="Calculo2_Romero">Cálculo 2 — Grupo Romero</option>
+          <option value="Calculo3_Arbelaez">Cálculo 3 — Grupo Arbeláez</option>
+          <option value="EstructuraDatos_Torres">Estructura de Datos — Grupo Torres</option>
         </select>
       </div>
       <div class="field">
@@ -221,7 +223,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNW5BXX-L8c8LrvLP3JXFyRY2_VDeNgt9YM8xBK_mo-iSV4KmDqOpLpqGQHRYgl9hz4g/exec';
 
-// Sesiones con fechas
 const SESIONES = {
   "0": "Audio 0 · Lunes 9 de Junio",
   "1": "Audio 1 · Martes 10 de Junio",
@@ -247,22 +248,107 @@ const SESIONES = {
   "21": "Audio 21 · Viernes 10 de Julio"
 };
 
-// Estudiantes — ACTUALIZAR CON LISTAS REALES
+// ── Listas de estudiantes por grupo (cédula → nombre) ──
 const STUDENTS = {
   "Calculo2_Guarin": {
-    "111111": "Estudiante Prueba Guarin",
-    "999991": "Leonardo Guarin"
+    "123":        "John Bolaños",
+    "1016951733": "RUGELES LEÓN TOMAS EDUARDO",
+    "1014864477": "ACOSTA VEGA ANA MARIA",
+    "1003516024": "ARBOLEDA SIERRA JHONATAN MAURICIO",
+    "1023083826": "BARRERO JERONIMO PIÑEROS",
+    "1048437750": "BELÉN DUEÑAS",
+    "1014596437": "BERNAL ROZO SANTIAGO",
+    "1014991510": "BOHORQUEZ BRAVO PAULA ISABELLA",
+    "1016013592": "BRIÑEZ FORERO DAVID SANTIAGO",
+    "1049616247": "POLO BUITRAGO ALEJANDRO",
+    "1122922440": "BUSTAMANTE CONTRERAS JUAN ANDRES",
+    "1014997200": "CASALLAS CASTILLO JERONIMO LUCA",
+    "1031610640": "CASTILLO OCHOA SALOMÉ",
+    "1000590591": "CONTRERAS PACHON JUAN ESTEBAN",
+    "1023084511": "CUERVO ROJAS MARIA JOSÉ JUANITA",
+    "1014481930": "DIAZ MEDINA ERICK SAMUEL",
+    "1028485424": "DIAZ TORRES NICOLAS",
+    "1014737372": "ESLAVA VARGAS CRISTOBAL",
+    "1141515671": "GARCIA RUEDAS JUAN PABLO",
+    "1010840910": "GARZÓN VELANDIA DAREN YESID",
+    "1077113340": "GOMEZ SÁNCHEZ JUANA SOFIA",
+    "1011202323": "GUIZA CAMELO DIEGO FERNANDO",
+    "1029661375": "GUTIERREZ TORRES SEBASTIAN",
+    "1032941923": "GUZMÁN CORTÉS NATALIA SOFÍA",
+    "1043973585": "GUZMAN FANEYTE MARIA ISABELL",
+    "1031808271": "HERRERA PALOMO EILYN JOHANNA",
+    "1016596134": "HIDALGO ROMERO JUAN JOSÉ",
+    "1001057259": "ISAZIGA CASTRILLÓN JUAN PABLO",
+    "1026270538": "LEAL TINJACA JUAN JOSE",
+    "1094047096": "LOANGO RAYO ANGIE KATHERINE",
+    "1021667839": "LÓPEZ CHÁVARRO SARA",
+    "1011322235": "LUENGAS FLÓREZ KEVIN DANIEL"
   },
   "Calculo2_Romero": {
-    "222222": "Estudiante Prueba Romero",
-    "999992": "Margui Romero"
+    "123":        "John Bolaños",
+    "1034518059": "MARTINEZ DELGADILLO JUANA GABRIELA",
+    "1057980145": "MATAJIRA ORDUZ JUAN SEBASTIÁN",
+    "1141716578": "MEJIA OSPINO OMETH DAVID",
+    "1014863464": "MUÑOZ ARDILA SAMUEL JERONIMO",
+    "1011202030": "MUÑOZ MALAVER MARIA PAULA",
+    "1021396254": "MUÑOZ TERÁN JUAN JOSÉ",
+    "1000161325": "NÚÑEZ LÓPEZ DANIEL ERNESTO",
+    "1013114529": "OCAMPO RUIZ NICHOLAS",
+    "1000329597": "ORTIZ GOMEZ DAMIAN TOMAS",
+    "1018443057": "PACHÓN CORTÉS ALEJANDRO",
+    "1033103047": "PARRA MESA JUAN ANDRÉS",
+    "1021633182": "PARRA MOGOLLON SANTIAGO",
+    "1028484671": "PRIETO CAJAMARCA JUAN DAVID",
+    "1014862724": "PULIDO GALEANO ADRIANA SOFIA",
+    "1066280807": "QUINTERO FARELO ELOY OSCAR",
+    "1014990417": "RAMOS SARMIENTO JUAN CAMILO",
+    "1023378845": "REYES ORTIZ JULIAN",
+    "1011090724": "ROMERO BELTRÁN JUAN ANDRÉS",
+    "1106227539": "RUBIANO NATALIA RIOS",
+    "1014662083": "RUEDA JIMENEZ HELEN YULIANA",
+    "1141118017": "RUIZ NUÑEZ DAVID ALEJANDRO",
+    "1000154076": "SAENZ INCHIMA LAURA",
+    "1031643500": "SALGADO CALDERON NICOLAS RICARDO",
+    "1000330731": "SÁNCHEZ ESPINOSA NICOLÁS",
+    "1034400674": "SIERRA CUELLAR DANIEL FELIPE",
+    "1019991566": "SIERRA RODRÍGUEZ LAURA SOFÍA",
+    "1021394414": "TÁMARA BOLÍVAR LEONARDO JOSÉ",
+    "1018505696": "TORRES ANZOLA ARNOLD SANTIAGO",
+    "1023084018": "VARGAS BRAUSIN JUAN SEBASTIAN",
+    "1141514047": "VELASQUEZ CONTRERAS LINA MARÍA",
+    "1141516620": "ZAMBRANO PARRA SOFIA"
+  },
+  "Calculo3_Arbelaez": {
+    "123":        "John Bolaños",
+    "1016594171": "MARÍA FERNANDA PRIETO CASALLAS",
+    "1016594172": "MARÍA JOSÉ GONZÁLEZ SERRANO",
+    "1016594173": "NICOL PERDOMO",
+    "1016594174": "DAVID SANTIAGO MENDEZ JIMENEZ",
+    "1016594175": "JHOAN SEBASTIAN MONTENEGRO ARIAS",
+    "1016594176": "JUAN SEBASTIAN ROMERO REYES",
+    "1016594177": "BOGOTA CRUZ KAREN LORENA",
+    "1016594178": "GALVIS CALDERON JUANA CATALINA",
+    "1016594179": "MARTÍNEZ BARBOSA ESTEBAN DAVID"
+  },
+  "EstructuraDatos_Torres": {
+    "123":        "John Bolaños",
+    "1011100243": "VELA USECHE GABRIEL ALEJANDRO",
+    "1016946301": "PALACIOS SOLER SANTIAGO",
+    "1025323053": "QUIMBAYO ÁLVAREZ MIGUEL ANGEL",
+    "1025532121": "DUARTE MENDIETA DAVID",
+    "1031651933": "BAQUERO SOTELO ANDRES FELIPE",
+    "1090338493": "FRANCO GUARUMO LAURA VALENTINA",
+    "1150184390": "BURGOS MUÑOZ HAROLD ANDRES",
+    "1034518091": "AVILA LUENGAS TOMAS"
   }
 };
 
-// Docentes
+// ── Docentes por grupo (cédula → nombre) ──
 const TEACHERS = {
-  "Calculo2_Guarin": { "999991": "Leonardo Guarin" },
-  "Calculo2_Romero": { "999992": "Margui Romero"  }
+  "Calculo2_Guarin":        { "19406140": "Leonardo Guarín Salomón",       "123": "John Bolaños" },
+  "Calculo2_Romero":        { "53103255": "Margui Angélica Romero Pineda",  "123": "John Bolaños" },
+  "Calculo3_Arbelaez":      { "94449678": "Daniel Arbelaez Alvarado",       "123": "John Bolaños" },
+  "EstructuraDatos_Torres": { "80831462": "Arley Fernando Torres Galindo",  "123": "John Bolaños" }
 };
 
 let state = { rol:'estudiante', grupo:'', audio:'', cedula:'', nombre:'' };
@@ -279,13 +365,11 @@ function setRol(rol) {
   document.getElementById('welcomeEst').style.display = esDoc ? 'none' : 'block';
   document.getElementById('welcomeDoc').style.display = esDoc ? 'block' : 'none';
 
-  // Cambiar color de tabs
   document.querySelectorAll('.tab').forEach(t => {
     t.classList.remove('est','doc');
     t.classList.add(esDoc ? 'doc' : 'est');
   });
 
-  // Cambiar botones
   const btnClass = esDoc ? 'primary-doc' : 'primary-est';
   ['btnP1','btnP2'].forEach(id => {
     const b = document.getElementById(id);
@@ -293,7 +377,6 @@ function setRol(rol) {
     b.classList.add(btnClass);
   });
 
-  // Reset estado
   state.grupo=''; state.audio=''; state.cedula=''; state.nombre='';
   document.getElementById('selGrupo').value='';
   document.getElementById('selAudio').value='';
@@ -351,16 +434,22 @@ function onCedInput() {
   } else {
     state.nombre='';
     box.className='confirm notfound';
-    box.textContent='Cédula no encontrada en '+state.grupo.replace('_',' ');
+    box.textContent='Cédula no encontrada en '+state.grupo.replace('_',' — ');
     btn.disabled=true;
   }
 }
 
 function buildSummary() {
   const esDoc = state.rol === 'docente';
+  const grupoLabel = {
+    "Calculo2_Guarin":        "Cálculo 2 — Guarín",
+    "Calculo2_Romero":        "Cálculo 2 — Romero",
+    "Calculo3_Arbelaez":      "Cálculo 3 — Arbeláez",
+    "EstructuraDatos_Torres": "Estructura de Datos — Torres"
+  };
   document.getElementById('summaryBox').innerHTML =
     'Rol: <strong>'+(esDoc ? 'Docente' : 'Estudiante')+'</strong><br>'+
-    'Grupo: <strong>'+state.grupo.replace('_',' ')+'</strong><br>'+
+    'Grupo: <strong>'+(grupoLabel[state.grupo] || state.grupo)+'</strong><br>'+
     'Sesión: <strong>'+SESIONES[state.audio]+'</strong><br>'+
     'Nombre: <strong>'+state.nombre+'</strong><br>'+
     'Archivo: <strong>'+getFileName()+'</strong>';
